@@ -7,7 +7,6 @@ let searchFromUser
 const stateSearchForm = document.querySelector("#select-state-form")
 console.log(stateSearchForm)
 const stateToSearchInput = document.querySelector("#select-state")
-console.log(stateToSearchInput)
 
 stateSearchForm.addEventListener("submit", function (e) {
     e.preventDefault()
@@ -15,8 +14,6 @@ stateSearchForm.addEventListener("submit", function (e) {
     userInput = userInput.toLowerCase().replace(" ", "_")
     searchFromUser = userInput
     console.log(userInput)
-
-    console.log(searchFromUser)
     fetchFunc(searchFromUser)
 }
 )
@@ -36,13 +33,15 @@ function createEl(tag) {
 }
 
 function createFilterSection () {
-   let main = document.querySelector(`main`)
+   let mainEl = document.querySelector(`main`)
    
-   let  asideSectionEl = createEl(`aside`)
+   let asideSectionEl = createEl(`aside`)
    asideSectionEl.setAttribute(`class`, `filters-section`)
    
    let h2FilterSectionEl = createEl(`h2`)
    h2FilterSectionEl.innerText = "Filter by:"
+
+   console.log(h2FilterSectionEl)
 
    let filterFormEl = createEl(`form`)
    filterFormEl.setAttribute(`id`, `filter-by-type-form`)
@@ -57,14 +56,31 @@ function createFilterSection () {
    selectEl.setAttribute(`name`, `filter-by-type`)
    selectEl.setAttribute(`id`, `filter-by-type`)
    
-   let optionEl
+   let selectATypeEl = createEl(`option`)
+   selectATypeEl.setAttribute(`value`, `""`)
+   selectATypeEl.innerText = "Select a type..."
+   
+   let microEl = createEl(`option`)
+   microEl.setAttribute(`value`, `micro`)
+   microEl.innerText = "Micro"
+
+   let regionalEl = createEl(`option`)
+   regionalEl.setAttribute(`value`, `regional`)
+   regionalEl.innerText = "Regional"
+
+   let brewpubEl = createEl(`option`)
+   brewpubEl.setAttribute(`value`, `brewpub`)
+   brewpubEl.innerText = "Brewpub"
+
+   
+   selectEl.append(`selectATypeEl`, `microEl`, `regionalEl`, `brewpubEl`)
+   labelFilterByTypeEl.append(`labelTitleEl`) //the h3 inside the label
+   filterFormEl.append(labelFilterByTypeEl, selectEl)
+   asideSectionEl.append(h2FilterSectionEl, filterFormEl)
+   mainEl.append(asideSectionEl)
    
    
-   main.append(`filterSectionEl`)
-   asideSectionEl.append(`h2FilterSectionEl`, `filterFormEl`)
-   labelFilterByTypeEl.append(`labelTitleEl`)
-   filterFormEl.append(`labelFilterByTypeEl`, `selectEl`)
-   console.log(asideSectionEl)
+   console.log(mainEl)
 
 }
 createFilterSection()
