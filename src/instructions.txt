@@ -6,19 +6,19 @@ In this exercise we explore a common scenario in ecommerce and booking sites, us
 
 
 Deliverables
-- A user can enter a US state and view a list of breweries in that state
+✔ - A user can enter a US state and view a list of breweries in that state
     - The list has a maximum of 10 breweries in it
     - The list has three types of breweries that offer brewery tours:
         - Micro
         - Regional
         - Brewpub
     - Do not show the other types of breweries
-- From the list of breweries, a user can view the following details about each brewery:
+✔ - From the list of breweries, a user can view the following details about each brewery:
     - Name
     - Type of brewery
     - Address
     - Phone Number
-- From the list of breweries, a user can visit the website of a brewery
+✔ - From the list of breweries, a user can visit the website of a brewery
 - From the 'filter by type of brewery' section, a user can filter by type of brewery
 - From the 'filter by city' section, a user can filter by city, the location of the brewery
 - From the 'filter by city' section, a user can clear all filters

@@ -54,6 +54,7 @@ function saveBreweriesToState() {
             
         })
         .then(function (){
+            mainEl.innerHTML = ""
             renderFilterSection(state.breweries)
             renderBreweryListSection(state.breweries)
             
@@ -74,6 +75,7 @@ function filterBreweries() {
 let mainEl = document.querySelector(`main`)
 
 function renderFilterSection (breweries) {
+    
     let asideSectionEl = createEl(`aside`)
     asideSectionEl.setAttribute(`class`, `filters-section`)
     
@@ -118,7 +120,7 @@ function renderFilterSection (breweries) {
     filterByCityHeadingButtonEl.innerText = "clear all"
 
     let filterByCityFormEl = createEl("form")
-    filterByCityFormEl.setAttribute("class", "filter-by-city-heading")
+    filterByCityFormEl.setAttribute("id", "filter-by-city-form")
 
     for(brewery of breweries) {
         let filterByCityFormInputEl = createEl("input")
@@ -148,6 +150,7 @@ function renderFilterSection (breweries) {
 }
 
 function renderBreweryListSection (breweries) {
+    
     let mainTitleEl = createEl(`h1`)
     mainTitleEl.innerText = "List of Brewries"
 
@@ -174,6 +177,7 @@ function renderBreweryListSection (breweries) {
     breweriesListEl.setAttribute("class", "breweries-list")
 
     for (brewery of breweries) {
+        let breweryLiEl = createEl("li")
         let titleEl = createEl(`h2`)
         titleEl.innerText = brewery.name
 
@@ -208,7 +212,8 @@ function renderBreweryListSection (breweries) {
         phoneSectionEl.append(phoneSectionTitleEl, phoneSectionNumberEl)
         addressSectionStreetEl.append(addressSectionStreetStrongEl)
         addressSectionEl.append(addressSectionTitleEl, addressSectionStreetEl)
-        breweriesListEl.append(titleEl, typeDivEl, addressSectionEl, phoneSectionEl, linkSectionEl)
+        breweryLiEl.append(titleEl, typeDivEl, addressSectionEl, phoneSectionEl, linkSectionEl)
+        breweriesListEl.append(breweryLiEl)
     }
     
     
