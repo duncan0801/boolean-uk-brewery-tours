@@ -7,7 +7,7 @@
     - Micro
     - Regional
     - Brewpub
-4. Render the breweries to the list wih the following details
+4. ✔ Render the breweries to the list wih the following details
     - Name
     - Type of brewery
     - Address
@@ -15,6 +15,9 @@
     - visit website button
 5. Allow the breweries to be filtered at a section for:
     - type 
+        1. add an event listener on the form for ""Type of brewery"
+        2. the event listener should include a function that changes the state accordingly when the value is selected 
+        3. re render of whole page  with filter applied
     - city with a section to clear all filters
 6. From the 'search for' section a user can search for brewery by city and by name
 */
@@ -23,9 +26,14 @@ function createEl(tag) {
 }
 
 let state = {
-    breweries: []
+    breweries: [],
+    filters: {
+        type: "",
+        cities: [],
+        name: []
+    }
 }
-
+let mainEl = document.querySelector(`main`)
 
 function fetchFunc(userState) {
     return fetch(`https://api.openbrewerydb.org/breweries?by_state=${userState}`)
@@ -47,19 +55,22 @@ function saveBreweriesToState() {
             state.breweries = breweries
             console.log(state)
         })
-        .then(function() {
-            let filteredBreweryList = filterBreweries()
-            state.breweries = filteredBreweryList
-            console.log(state.breweries)
-            
+        .then(function (){         
+            renderAll(state.breweries)
+
+            let typeOfBreweryFilterFormEl = document.querySelector("#filter-by-type")
+            console.log(typeOfBreweryFilterFormEl)
+
+            typeOfBreweryFilterFormEl.addEventListener("change", function (e) {
+                e.preventDefault()
+                //1. change the state to the value from the form el when submited
+                state.filters.type = typeOfBreweryFilterFormEl.value
+                console.log(state.filters.type)
+                // 2. Rerender with the applied filters
+            })
         })
-        .then(function (){
-            mainEl.innerHTML = ""
-            renderFilterSection(state.breweries)
-            renderBreweryListSection(state.breweries)
-            
-        }) 
     })
+    
 }
 saveBreweriesToState()
 
@@ -67,12 +78,10 @@ function filterBreweries() {
     let filteredBreweries = state.breweries.filter(function(brewery){
         return ["micro", "regional", "brewpub"].includes(brewery["brewery_type"])
     })
-    let finalTenBreweries = filteredBreweries.slice(0, 10)
-    return finalTenBreweries
+    // let finalTenBreweries = filteredBreweries.slice(0, 10)
+    return filteredBreweries
     
 }
-
-let mainEl = document.querySelector(`main`)
 
 function renderFilterSection (breweries) {
     
@@ -122,20 +131,28 @@ function renderFilterSection (breweries) {
     let filterByCityFormEl = createEl("form")
     filterByCityFormEl.setAttribute("id", "filter-by-city-form")
 
-    for(brewery of breweries) {
+    const slicedBreweries = breweries.slice(0, 10)
+
+    allCities = state.breweries.map(function(brewery) {
+        return brewery.city
+    })
+
+    let sorteduniqueCities = [...new Set(allCities)].sort()
+    console.log(sorteduniqueCities)
+    
+    for(city of sorteduniqueCities) {//TODO Make sure that the breweries don't repeat in the document
+
         let filterByCityFormInputEl = createEl("input")
         filterByCityFormInputEl.setAttribute("type", "checkbox")
-        filterByCityFormInputEl.setAttribute("name", brewery.city)
-        filterByCityFormInputEl.setAttribute("value", brewery.city)
+        filterByCityFormInputEl.setAttribute("name", city)
+        filterByCityFormInputEl.setAttribute("value", city)
 
         let cityLabelEl = createEl("label")
-        cityLabelEl.innerText = brewery.city
+        cityLabelEl.innerText = city
         
         filterByCityFormEl.append(filterByCityFormInputEl, cityLabelEl)
         asideSectionEl.append(filterByCityFormEl)
         }
-    
-
 
     filterByCityHeadingEl.append(filterByCityHeadingTitleEl, filterByCityHeadingButtonEl)
 
@@ -144,9 +161,6 @@ function renderFilterSection (breweries) {
     filterFormEl.append(labelFilterByTypeEl, selectEl)
     asideSectionEl.append(h2FilterSectionEl, filterFormEl, filterByCityHeadingEl, filterByCityFormEl)
     mainEl.append(asideSectionEl)
-    console.log(asideSectionEl)
-
-
 }
 
 function renderBreweryListSection (breweries) {
@@ -176,7 +190,9 @@ function renderBreweryListSection (breweries) {
     let breweriesListEl = createEl("ul")
     breweriesListEl.setAttribute("class", "breweries-list")
 
-    for (brewery of breweries) {
+    const slicedBreweries = breweries.slice(0, 10)
+
+    for (brewery of slicedBreweries) {
         let breweryLiEl = createEl("li")
         let titleEl = createEl(`h2`)
         titleEl.innerText = brewery.name
@@ -224,4 +240,13 @@ function renderBreweryListSection (breweries) {
     articleEl.append(breweriesListEl)
 
     mainEl.append(mainTitleEl, searchBarHeaderEl, articleEl)
+}
+
+function renderAll(breweries) {
+    mainEl.innerHTML = ""
+    let filteredBreweryList = filterBreweries()
+    breweries = filteredBreweryList
+    filterBreweries()
+    renderFilterSection (breweries)
+    renderBreweryListSection (breweries)
 }
