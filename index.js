@@ -66,7 +66,7 @@ function saveBreweriesToState() {
             state.breweries = breweries
         })
         .then(function (){         
-            renderAll(state.breweries)
+            renderAll()
         })
  
     })
@@ -253,36 +253,38 @@ function renderSearchSection() {
     searchBarHeaderEl.append(searchFormEL)
     mainEl.append(mainTitleEl, searchBarHeaderEl)
 
-    searchFormEL.addEventListener("keyup", function(e) {
-        e.preventDefault()
+    searchBarInputEl.addEventListener("input", function(e) {
 
         let previousList = document.querySelector("article")
         previousList.remove()
-
         state.filters.search = e.target.value
+
+        if (state.filters.search === "") {
+            renderBreweryListSection(state.breweries)
+        }
+
+        
         let breweries = filterBreweries()
         let filteredBreweries = breweries.filter(function (brewery) {
             return brewery.name.includes(state.filters.search) || brewery.city.includes(state.filters.search)
         })
         console.log(state.filters.search)
         console.log(filteredBreweries)
-        state.breweries = filteredBreweries
         
         
-        renderBreweryListSection()
+        renderBreweryListSection(filteredBreweries)
     })
 
 }
 
-function renderBreweryListSection () {
+function renderBreweryListSection (filteredBreweries) {
 
-    let breweries = filterBreweries()
     let articleEl = createEl("article")
 
     let breweriesListEl = createEl("ul")
     breweriesListEl.setAttribute("class", "breweries-list")
 
-    const slicedBreweries = breweries.slice(0, 10)
+    const slicedBreweries = filteredBreweries.slice(0, 10)
 
     for (brewery of slicedBreweries) {
         let breweryLiEl = createEl("li")
@@ -339,5 +341,5 @@ function renderAll() {
     
     renderFilterSection()
     renderSearchSection()
-    renderBreweryListSection()
+    renderBreweryListSection(state.breweries)
 }
