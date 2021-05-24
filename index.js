@@ -30,7 +30,7 @@ let state = {
     filters: {
         type: "",
         cities: [],
-        name: []
+        search: ""
     }
 }
 let mainEl = document.querySelector(`main`)
@@ -55,7 +55,7 @@ function saveBreweriesToState() {
             filters: {
                 type: "",
                 cities: [],
-                name: []
+                nameCity: ["Epidemic Ales"]
             }
         }
 
@@ -98,9 +98,16 @@ function filterBreweries() {
             return state.filters.cities.includes(brewery.city)
         })
     }
+    // if(state.filters.nameCity !== "") {
+    //     filteredBreweries = filteredBreweries.filter(function(brewery) {
+    //         return brewery.name.includes(state.filters.nameCity) || 
+    //         brewery.city.includes(state.filters.nameCity)
+    //     })
+    //     console.log(filteredBreweries)
+    // } 
     
-    // let finalTenBreweries = filteredBreweries.slice(0, 10)
-    return filteredBreweries
+    let finalTenBreweries = filteredBreweries.slice(0, 10)
+    return finalTenBreweries
     
 }
 
@@ -220,11 +227,7 @@ function renderFilterSection() {
         // 2. Rerender with the applied filters
     })
 }
-
-function renderBreweryListSection () {
-
-    let breweries = filterBreweries()
-
+function renderSearchSection() {
     let mainTitleEl = createEl(`h1`)
     mainTitleEl.innerText = "List of Brewries"
 
@@ -245,6 +248,35 @@ function renderBreweryListSection () {
     searchBarInputEl.setAttribute("name", "search-breweries") 
     searchBarInputEl.setAttribute("type", "text") 
 
+    labelForSearchFormEl.append(SearchFormTitleEl)
+    searchFormEL.append(labelForSearchFormEl, searchBarInputEl)
+    searchBarHeaderEl.append(searchFormEL)
+    mainEl.append(mainTitleEl, searchBarHeaderEl)
+
+    searchFormEL.addEventListener("keyup", function(e) {
+        e.preventDefault()
+
+        let previousList = document.querySelector("article")
+        previousList.remove()
+
+        state.filters.search = e.target.value
+        let breweries = filterBreweries()
+        let filteredBreweries = breweries.filter(function (brewery) {
+            return brewery.name.includes(state.filters.search) || brewery.city.includes(state.filters.search)
+        })
+        console.log(state.filters.search)
+        console.log(filteredBreweries)
+        state.breweries = filteredBreweries
+        
+        
+        renderBreweryListSection()
+    })
+
+}
+
+function renderBreweryListSection () {
+
+    let breweries = filterBreweries()
     let articleEl = createEl("article")
 
     let breweriesListEl = createEl("ul")
@@ -293,18 +325,19 @@ function renderBreweryListSection () {
     }
     
     
-    labelForSearchFormEl.append(SearchFormTitleEl)
-    searchFormEL.append(labelForSearchFormEl, searchBarInputEl)
-    searchBarHeaderEl.append(searchFormEL)
+    
 
     articleEl.append(breweriesListEl)
 
-    mainEl.append(mainTitleEl, searchBarHeaderEl, articleEl)
+    mainEl.append(articleEl)
+
+    
 }
 
 function renderAll() {
     mainEl.innerHTML = ""
     
     renderFilterSection()
+    renderSearchSection()
     renderBreweryListSection()
 }

@@ -25,6 +25,16 @@ Deliverables
 - From the 'search' section, a user can search for breweries by:
     - Name
     - City
+    Lets do name and/or city
+    -user typs in the name or city of the brewery
+    -the word/s are stored in an array called search:
+    - addEventListener on the submit 
+    - during that event:
+    1. state.search = ""
+    2. save new value to state 
+    3. Add consitions to filter function
+
+
 Instructions
 - Download the files from https://codesandbox.io/s/js-exercise-brewery-tour-starter-template-whq5i?file=/templates/main-section.html
 - Read the "Open Brewery DB" documentation: https://www.openbrewerydb.org/documentation/01-listbreweries
